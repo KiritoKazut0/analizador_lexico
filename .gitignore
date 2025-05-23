@@ -1,0 +1,36 @@
+# Binaries
+*.exe
+*.out
+*.test
+
+# Logs and temporary files
+*.log
+tmp/
+*.tmp
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# Dependency directories (if any)
+vendor/
+
+# Build artifacts
+bin/
+dist/
+
+# Go build cache
+*.a
+pkg/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Air config & temporary files
+.air.toml
+.air/
+
+# Git ignored folders/files
+.env

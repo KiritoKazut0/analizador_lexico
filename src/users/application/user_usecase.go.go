@@ -9,11 +9,17 @@ type UserUseCase struct {
 	repository repositories.UserRepository
 }
 
+func NewUserUseCase(repo repositories.UserRepository) *UserUseCase {
+	return &UserUseCase{
+		repository: repo,
+	}
+}
+
 func (u *UserUseCase) CreateUser(user *entities.User) error {
 	return u.repository.CreateUser(user)
 }
 
-func (u *UserUseCase) GetAllUsers() ([]*entities.User, error) {
+func (u *UserUseCase) GetAllUsers() ([]entities.User, error) {
 	return u.repository.GetAllUsers()
 }
 

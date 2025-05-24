@@ -7,6 +7,6 @@ type UserRepository interface {
 	GetUserByID(clave string) (*entities.User, error)
 	UpdateUser(user *entities.User) ( *entities.User, error)
 	DeleteUser(clave string) error
-	GetAllUsers() ([]*entities.User, error) 
+	GetAllUsers() ([]entities.User, error) 
 
 }

@@ -10,7 +10,7 @@ type MysqlRepository struct {
 }
 
 
-func NewUserMysqlRepository(db * gorm.DB) *MysqlRepository {
+func NewUserMysqlRepository(db *gorm.DB) *MysqlRepository {
 	return &MysqlRepository{ db: db }
 }
 
@@ -20,21 +20,27 @@ func (m *MysqlRepository) GetAllUsers() ([]entities.User, error){
 	 return users, result.Error
 }
 
-func (m *MysqlRepository) GetUserByID(clave string) (entities.User, error) {
+func (m *MysqlRepository) GetUserByID(clave string) (*entities.User, error) {
 	var user entities.User
-	result := m.db.First(&user, clave)
-	return user, result.Error
+	result := m.db.Where("clave = ?", clave).First(&user)
+	return &user, result.Error
 }
+
 
 func (m *MysqlRepository) CreateUser(user *entities.User) error {
 	return m.db.Create(user).Error
 }
 
 
-func (m *MysqlRepository) UpdateUser(user *entities.User) error {
-    return m.db.Model(&entities.User{}).Where("clave = ?", user.Clave).Updates(user).Error
+func (m *MysqlRepository) UpdateUser(user *entities.User) (*entities.User, error) {
+    err := m.db.Model(&entities.User{}).Where("clave = ?", user.Clave).Updates(user).Error
+    if err != nil {
+        return nil, err
+    }
+    return user, nil
 }
 
 func (m *MysqlRepository) DeleteUser(clave string) error {
-	return m.db.Delete( &entities.User{} , clave).Error
+	return m.db.Where("clave = ?", clave).Delete(&entities.User{}).Error
 }
+

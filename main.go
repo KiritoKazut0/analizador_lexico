@@ -1,33 +1,47 @@
 package main
 
 import (
+	"github.com/KiritoKazut0/analizador-lexico/src/core"
+	UserUseCase "github.com/KiritoKazut0/analizador-lexico/src/users/application"
+	entities "github.com/KiritoKazut0/analizador-lexico/src/users/domain/entities"
+	UserController "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/controllers"
+	UserDB "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/database"
+	UserRouter "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/routers"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"github.com/KiritoKazut0/analizador-lexico/src/core"
-	"github.com/gorilla/mux"
 )
 
 func main() {
 
-	r := mux.NewRouter()
-
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
-	})
-
 	// configure initialization
-
 	db, err := core.ConnectMysql()
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)
-
 	}
+
+	log.Println("Starting migration...")
+	if err := db.AutoMigrate(&entities.User{}); err != nil {
+		log.Fatalf("Migration error: %v", err)
+	}
+	log.Println("Migration done successfully")
+
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalf("Error getting database instance: %v", err)
 	}
-	sqlDB.Close()
+	defer sqlDB.Close()
 
-	http.ListenAndServe(":3000", r)
+	userRepository := UserDB.NewUserMysqlRepository(db)
+	userUseCase := UserUseCase.NewUserUseCase(userRepository)
+	userControllor := UserController.NewUserController(userUseCase)
+
+	router := mux.NewRouter()
+	UserRouter.UserRoutes(router, userControllor)
+
+	log.Println("Server listenin in http://localhost:3000")
+	if err := http.ListenAndServe(":3000", router); err != nil {
+		log.Fatalf("Error to setup server: %v", err)
+	}
 
 }

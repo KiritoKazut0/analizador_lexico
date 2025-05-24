@@ -17,17 +17,16 @@ func (u *UserUseCase) GetAllUsers() ([]*entities.User, error) {
 	return u.repository.GetAllUsers()
 }
 
-func (u *UserUseCase) GetUserByID(id int) (*entities.User, error) {
-	return u.repository.GetUserByID(id)
+func (u *UserUseCase) GetUserByID(clave string) (*entities.User, error) {
+	return u.repository.GetUserByID(clave)
 }
 
-func (u *UserUseCase) UpdateUser(user *entities.User) error {
+func (u *UserUseCase) UpdateUser(user *entities.User) (*entities.User, error) {
 	return u.repository.UpdateUser(user)
 }
 
-func (u *UserUseCase) DeleteUser(id int) error {
-	return u.repository.DeleteUser(id)
+func (u *UserUseCase) DeleteUser(clave string) error {
+	return u.repository.DeleteUser(clave)
 }
-
 
 

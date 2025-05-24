@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-
 	"github.com/KiritoKazut0/analizador-lexico/src/core"
 	"github.com/gorilla/mux"
 )

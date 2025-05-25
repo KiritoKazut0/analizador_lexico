@@ -1,23 +1,37 @@
 package main
 
 import (
-	"github.com/KiritoKazut0/analizador-lexico/src/core"
+	core "github.com/KiritoKazut0/analizador-lexico/src/core"
 	UserUseCase "github.com/KiritoKazut0/analizador-lexico/src/users/application"
 	entities "github.com/KiritoKazut0/analizador-lexico/src/users/domain/entities"
+	UserRedis "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/cache"
 	UserController "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/controllers"
 	UserDB "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/database"
 	UserRouter "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/routers"
-	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
+
 	"log"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 
 	// configure initialization
 	db, err := core.ConnectMysql()
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)
+	}
+
+	redisClient, err := core.ConnectRedisClient()
+	if err != nil {
+		log.Fatalf("Error connecting to Redis: %v", err)
 	}
 
 	log.Println("Starting migration...")
@@ -33,7 +47,8 @@ func main() {
 	defer sqlDB.Close()
 
 	userRepository := UserDB.NewUserMysqlRepository(db)
-	userUseCase := UserUseCase.NewUserUseCase(userRepository)
+	userCacheRepository := UserRedis.NewUserRepository(redisClient)
+	userUseCase := UserUseCase.NewUserUseCase(userRepository, userCacheRepository)
 	userControllor := UserController.NewUserController(userUseCase)
 
 	router := mux.NewRouter()

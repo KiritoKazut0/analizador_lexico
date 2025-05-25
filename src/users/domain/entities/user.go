@@ -6,3 +6,5 @@ type User struct {
 	Correo   string `gorm:"not null" json:"correo"`
 	Telefono string `gorm:"not null" json:"telefono"`
 }
+
+

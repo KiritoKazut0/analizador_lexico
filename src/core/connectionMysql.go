@@ -7,7 +7,8 @@ import (
 )
 
 func ConnectMysql() (*gorm.DB, error) {
-	var DNS = ""
+	var DNS = "root:admin@tcp(localhost:3306)/words?parseTime=true"
+	
 	db, err := gorm.Open(mysql.Open(DNS), &gorm.Config{})
 
 	if err != nil {

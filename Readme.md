@@ -1,0 +1,1 @@
+docker run -d  --name redis-container -p 6379:6379 -e REDIS_PASSWORD=admin redis:latest redis-server --requirepass admin

@@ -16,7 +16,7 @@ func UserRoutes(router *mux.Router, controller *controllers.UserController) {
 	routerUser.HandleFunc("", controller.UpdateUser).Methods(http.MethodPut)
 	routerUser.HandleFunc("/{id}", controller.DeleteUser).Methods(http.MethodDelete)
 
-	router.HandleFunc("/lotes", controller.CreateUsersBatch).Methods(http.MethodPost)
+	routerUser.HandleFunc("/lotes", controller.CreateUsersBatch).Methods(http.MethodPost)
 	router.HandleFunc("/paginated", controller.GetAllUsersPaginated).Methods(http.MethodGet)
 
 }

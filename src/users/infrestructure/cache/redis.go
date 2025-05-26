@@ -94,6 +94,8 @@ func (r *UserRepository) GetUsersPaginated(page int) ([]entities.User, error) {
 		return nil, fmt.Errorf("failed to unmarshal users: %v", err)
 	}
 
+	fmt.Println("se solicito desde redis ")
+
 	return users, nil
 }
 

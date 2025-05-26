@@ -8,11 +8,11 @@ import (
 	UserController "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/controllers"
 	UserDB "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/database"
 	UserRouter "github.com/KiritoKazut0/analizador-lexico/src/users/infrestructure/routers"
+	"github.com/rs/cors"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -21,7 +21,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 
 	// configure initialization
 	db, err := core.ConnectMysql()
@@ -52,10 +51,20 @@ func main() {
 	userControllor := UserController.NewUserController(userUseCase)
 
 	router := mux.NewRouter()
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Origin", "Content-Type", "Authorization", "Accept"},
+		ExposedHeaders:   []string{"Content-Length", "Content-Type"},
+		AllowCredentials: true,
+	})
+	
+	handler := corsMiddleware.Handler(router)
+
 	UserRouter.UserRoutes(router, userControllor)
 
 	log.Println("Server listenin in http://localhost:3000")
-	if err := http.ListenAndServe(":3000", router); err != nil {
+	if err := http.ListenAndServe(":3000", handler); err != nil {
 		log.Fatalf("Error to setup server: %v", err)
 	}
 

@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+
 	"github.com/KiritoKazut0/analizador-lexico/src/users/application"
 	"github.com/KiritoKazut0/analizador-lexico/src/users/domain/entities"
 	"github.com/gorilla/mux"
@@ -34,6 +36,7 @@ func (c UserController) GetAllUser(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusInternalServerError, nil, false, "Error to get users")
 		return
 	}
+	fmt.Printf("Se solicito datos")
 	writeJSON(w, http.StatusOK, users, true, "Users retrieved successfully")
 }
 

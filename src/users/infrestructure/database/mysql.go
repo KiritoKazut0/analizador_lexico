@@ -64,6 +64,7 @@ func (m *MysqlRepository) DeleteUser(clave string) error {
 func (m *MysqlRepository) GetUsersWithPagination(offset, limit int) ([]entities.User, error) {
 	var users []entities.User
 	result := m.db.Offset(offset).Limit(limit).Find(&users)
+	print("se solicito desde mysql ")
 	return users, result.Error
 }
 

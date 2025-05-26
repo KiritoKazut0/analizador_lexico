@@ -23,7 +23,7 @@ func (m *MysqlRepository) GetAllUsers() ([]entities.User, error) {
 
 func (m *MysqlRepository) GetUserByID(clave string) (*entities.User, error) {
 	var user entities.User
-	result := m.db.Where("clave = ?", clave).First(&user)
+	result := m.db.Where("id = ?", clave).First(&user)
 	return &user, result.Error
 }
 
@@ -49,8 +49,8 @@ func (m *MysqlRepository) CreateUsersBatch(users []entities.User) error {
 	return nil
 }
 
-func (m *MysqlRepository) UpdateUser(user *entities.User) (*entities.User, error) {
-	err := m.db.Model(&entities.User{}).Where("clave = ?", user.Clave).Updates(user).Error
+func (m *MysqlRepository) UpdateUser( clave string, user *entities.User) (*entities.User, error) {
+	err := m.db.Model(&entities.User{}).Where("id = ?", clave).Updates(user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (m *MysqlRepository) UpdateUser(user *entities.User) (*entities.User, error
 }
 
 func (m *MysqlRepository) DeleteUser(clave string) error {
-	return m.db.Where("clave = ?", clave).Delete(&entities.User{}).Error
+	return m.db.Where("id = ?", clave).Delete(&entities.User{}).Error
 }
 
 func (m *MysqlRepository) GetUsersWithPagination(offset, limit int) ([]entities.User, error) {

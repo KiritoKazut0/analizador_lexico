@@ -6,7 +6,7 @@ type UserRepository interface {
 	CreateUser(user *entities.User) error
 	CreateUsersBatch(users []entities.User) error
 	GetUserByID(clave string) (*entities.User, error)
-	UpdateUser(user *entities.User) (*entities.User, error)
+	UpdateUser( clave string ,user *entities.User) (*entities.User, error)
 	DeleteUser(clave string) error
 	GetAllUsers() ([]entities.User, error)
 	GetUsersWithPagination(offset, limit int) ([]entities.User, error)

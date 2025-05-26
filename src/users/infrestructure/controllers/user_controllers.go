@@ -70,25 +70,7 @@ func (c UserController) GetAllUsersPaginated(w http.ResponseWriter, r *http.Requ
 	writeJSON(w, http.StatusOK, paginatedResponse, true, "Paginated users retrieved successfully")
 }
 
-func (c UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	if params == nil || params["id"] == "" {
-		writeJSON(w, http.StatusBadRequest, nil, false, "Clave is required")
-		return
-	}
 
-	user, err := c.application.GetUserByID(params["id"])
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			writeJSON(w, http.StatusNotFound, nil, false, "User not found")
-			return
-		}
-		writeJSON(w, http.StatusInternalServerError, nil, false, "Error to get user: "+err.Error())
-		return
-	}
-
-	writeJSON(w, http.StatusOK, user, true, "User retrieved successfully")
-}
 
 func (c UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user entities.User
@@ -133,14 +115,40 @@ func (c UserController) CreateUsersBatch(w http.ResponseWriter, r *http.Request)
 	}, true, "Users batch created successfully")
 }
 
+func (c UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	if params == nil || params["id"] == "" {
+		writeJSON(w, http.StatusBadRequest, nil, false, "Clave is required")
+		return
+	}
+
+	user, err := c.application.GetUserByID(params["id"])
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			writeJSON(w, http.StatusNotFound, nil, false, "User not found")
+			return
+		}
+		writeJSON(w, http.StatusInternalServerError, nil, false, "Error to get user: "+err.Error())
+		return
+	}
+
+	writeJSON(w, http.StatusOK, user, true, "User retrieved successfully")
+}
+
 func (c UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	if params == nil || params["id"] == "" {
+		writeJSON(w, http.StatusBadRequest, nil, false, "Clave is required")
+		return
+	}
+
 	var user entities.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		writeJSON(w, http.StatusBadRequest, nil, false, "Complete all fields")
 		return
 	}
 
-	updatedUser, err := c.application.UpdateUser(&user)
+	updatedUser, err := c.application.UpdateUser(params["id"],&user)
 	if err != nil {
 		writeJSON(w, http.StatusBadRequest, nil, false, "Failed to update user: "+err.Error())
 		return

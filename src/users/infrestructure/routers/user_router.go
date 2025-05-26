@@ -13,7 +13,7 @@ func UserRoutes(router *mux.Router, controller *controllers.UserController) {
 	routerUser.HandleFunc("",controller.GetAllUser).Methods(http.MethodGet)
 	routerUser.HandleFunc("/{id}", controller.GetUserByID).Methods(http.MethodGet)
 	routerUser.HandleFunc("", controller.CreateUser).Methods(http.MethodPost)
-	routerUser.HandleFunc("", controller.UpdateUser).Methods(http.MethodPut)
+	routerUser.HandleFunc("/{id}", controller.UpdateUser).Methods(http.MethodPut)
 	routerUser.HandleFunc("/{id}", controller.DeleteUser).Methods(http.MethodDelete)
 
 	routerUser.HandleFunc("/lotes", controller.CreateUsersBatch).Methods(http.MethodPost)

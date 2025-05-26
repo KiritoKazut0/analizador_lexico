@@ -138,8 +138,8 @@ func (u *UserUseCase) GetUserByID(clave string) (*entities.User, error) {
 	return u.repository.GetUserByID(clave)
 }
 
-func (u *UserUseCase) UpdateUser(user *entities.User) (*entities.User, error) {
-	updatedUser, err := u.repository.UpdateUser(user)
+func (u *UserUseCase) UpdateUser( clave string , user *entities.User) (*entities.User, error) {
+	updatedUser, err := u.repository.UpdateUser(clave, user)
 	if err != nil {
 		return nil, err
 	}
